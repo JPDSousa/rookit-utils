@@ -21,6 +21,9 @@
  ******************************************************************************/
 package log;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("javadoc")
@@ -28,7 +31,7 @@ public class Validator {
 	
 	protected final Logger logger;
 	
-	Validator(Logger logger) {
+	public Validator(Logger logger) {
 		this.logger = logger;
 	}
 	
@@ -39,9 +42,63 @@ public class Validator {
 	}
 	
 	public void checkArgumentStringNotEmpty(String argument, String message) {
-		if(argument == null || argument.isEmpty()) {
+		checkArgumentNotNull(argument, message);
+		if(argument.isEmpty()) {
 			Errors.handleException(new IllegalArgumentException(message), logger);
 		}
 	}
 	
+	public void checkArgumentNonEmptyCollection(Collection<?> argument, String message) {
+		checkArgumentNotNull(argument, message);
+		if(argument.isEmpty()) {
+			Errors.handleException(new IllegalArgumentException(message), logger);
+		}
+	}
+	
+	public void checkArgumentEmptyCollection(Collection<?> argument, String message) {
+		checkArgumentNotNull(argument, message);
+		if(!argument.isEmpty()) {
+			Errors.handleException(new IllegalArgumentException(message), logger);
+		}
+	}
+	
+	public void checkArgumentNotContains(Object argument, Collection<?> collection, String message) {
+		checkArgumentNotNull(argument, message);
+		if(collection.contains(argument)) {
+			Errors.handleException(new IllegalArgumentException(message), logger);
+		}
+	}
+	
+	public void checkArgumentPositive(Long argument, String message) {
+		checkArgumentNotNull(argument, message);
+		if(argument < 0) {
+			Errors.handleException(new IllegalArgumentException(message), logger);
+		}
+	}
+	
+	public void checkArgumentPositive(Integer argument, String message) {
+		checkArgumentNotNull(argument, message);
+		if(argument < 0) {
+			Errors.handleException(new IllegalArgumentException(message), logger);
+		}
+	}
+	
+	public void checkArgumentBetween(int argument, int min, int max, String message) {
+		checkArgumentBetween(argument, min, max, message, message);
+	}
+	
+	public void checkArgumentBetween(int argument, int min, int max, String minMessage, String maxMessage) {
+		if(argument < min) {
+			Errors.handleException(new IllegalArgumentException(minMessage), logger);
+		}
+		else if(argument > max) {
+			Errors.handleException(new IllegalArgumentException(maxMessage), logger);
+		}
+	}
+	
+	public void checkSingleEntryMap(Map<?, ?> map, String message) {
+		if(map.size() != 1) {
+			Errors.handleException(new RuntimeException(message), logger);
+		}
+	}
 }
