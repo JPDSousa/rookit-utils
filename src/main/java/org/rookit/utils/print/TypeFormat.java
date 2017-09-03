@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package print;
+package org.rookit.utils.print;
 
 @SuppressWarnings("javadoc")
 public enum TypeFormat{

@@ -19,8 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package log;
+package org.rookit.utils.log;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -30,6 +31,10 @@ import org.apache.logging.log4j.Logger;
 public class Validator {
 	
 	protected final Logger logger;
+	
+	public Validator(Logs log) {
+		this(log.getLogger());
+	}
 	
 	public Validator(Logger logger) {
 		this.logger = logger;
@@ -100,5 +105,13 @@ public class Validator {
 		if(map.size() != 1) {
 			Errors.handleException(new RuntimeException(message), logger);
 		}
+	}
+	
+	public void handleIOException(IOException cause) {
+		Errors.handleException(new RuntimeException(cause), logger);
+	}
+	
+	public void info(String message) {
+		logger.info(message);
 	}
 }

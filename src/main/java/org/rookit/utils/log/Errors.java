@@ -1,4 +1,4 @@
-package log;
+package org.rookit.utils.log;
 
 import org.apache.logging.log4j.Logger;
 

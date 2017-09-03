@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package builder;
+package org.rookit.utils.builder;
 
 @SuppressWarnings("javadoc")
 public interface Builder<P> {

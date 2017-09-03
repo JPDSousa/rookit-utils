@@ -1,4 +1,4 @@
-package resource;
+package org.rookit.utils.resource;
 
 import java.io.IOException;
 import java.nio.file.Files;

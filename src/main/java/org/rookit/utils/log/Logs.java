@@ -1,4 +1,4 @@
-package log;
+package org.rookit.utils.log;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,8 +17,7 @@ import org.apache.logging.log4j.core.appender.ConsoleAppender.Target;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-
-import resource.ResourceManager;
+import org.rookit.utils.resource.ResourceManager;
 
 @SuppressWarnings("javadoc")
 public enum Logs {
