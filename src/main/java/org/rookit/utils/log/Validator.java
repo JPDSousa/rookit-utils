@@ -24,6 +24,7 @@ package org.rookit.utils.log;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.logging.log4j.Logger;
 
@@ -98,6 +99,13 @@ public class Validator {
 		}
 		else if(argument > max) {
 			Errors.handleException(new IllegalArgumentException(maxMessage), logger);
+		}
+	}
+	
+	public void checkArgumentClass(Class<?> expected, Class<?> actual, String message) {
+		checkArgumentNotNull(actual, message);
+		if(!Objects.equals(expected, actual)) {
+			Errors.handleException(new IllegalArgumentException(message), logger);
 		}
 	}
 	
