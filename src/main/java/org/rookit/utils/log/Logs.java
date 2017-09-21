@@ -27,6 +27,7 @@ public enum Logs {
 	FILE_SYSTEM,
 	CONNECTION,
 	CORE,
+	DM,
 	CONFIG;
 
 	static {
