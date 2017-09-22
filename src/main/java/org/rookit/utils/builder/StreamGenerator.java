@@ -24,8 +24,8 @@ package org.rookit.utils.builder;
 import java.util.stream.Stream;
 
 @SuppressWarnings("javadoc")
-public interface StreamGenerator<T> {
+public interface StreamGenerator<I, O> {
 	
-	Stream<T> generate();
+	Stream<O> generate(I input);
 
 }
