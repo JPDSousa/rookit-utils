@@ -6,9 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @SuppressWarnings("javadoc")
-public class ResourceManager {
+public class Resources {
 
 	private static final Path LOGS = Paths.get("logs");
+	
+	public static final Path RESOURCES_MAIN = Paths.get("src", "main", "resources");
+	public static final Path RESOURCES_TEST = Paths.get("src", "test", "resources");
 
 	public static Path logPath() {
 		ensureExists(LOGS, true);
