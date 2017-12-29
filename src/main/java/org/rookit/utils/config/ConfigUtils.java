@@ -68,5 +68,19 @@ public final class ConfigUtils {
 	public static <T, E> T getOrDefault(E get, T def, Function<E, T> mapper) {
 		return get != null ? mapper.apply(get) : def;
 	}
+	
+	public static Path createFile(Path path) {
+		try {
+			if(!Files.exists(path.getParent())) {
+				Files.createDirectories(path.getParent());
+				if(!Files.exists(path)) {
+					Files.createFile(path);
+				}
+			}
+			return path;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }
