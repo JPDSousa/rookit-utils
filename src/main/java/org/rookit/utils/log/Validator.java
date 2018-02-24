@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.logging.log4j.Logger;
-import org.rookit.utils.exception.InvalidOperationException;
 
 @SuppressWarnings("javadoc")
 public class Validator {
@@ -120,11 +119,28 @@ public class Validator {
 		Errors.handleException(new RuntimeException(cause), logger);
 	}
 	
-	public void invalidOperation(String message) {
-		Errors.handleException(new InvalidOperationException(message), logger);
+	public <T> T invalidOperation(String message) {
+		return Errors.handleException(new UnsupportedOperationException(message), logger);
+		
+	}
+	
+	public void runtimeException(String message) {
+		Errors.handleException(new RuntimeException(message), logger);
+	}
+	
+	public void runtimeException(Throwable cause) {
+		Errors.handleException(new RuntimeException(cause), logger);
+	}
+	
+	public void runtimeException(String message, Throwable cause) {
+		Errors.handleException(new RuntimeException(message, cause), logger);
 	}
 	
 	public void info(String message) {
 		logger.info(message);
+	}
+	
+	public void warning(String message) {
+		logger.warn(message);
 	}
 }
