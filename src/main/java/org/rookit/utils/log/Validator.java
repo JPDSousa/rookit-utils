@@ -25,122 +25,119 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("javadoc")
-public class Validator {
+public abstract class Validator {
 	
-	protected final Logger logger;
+	private final LogManager category;
+	private final Logger categoryLogger;
 	
-	public Validator(Logs log) {
-		this(log.getLogger());
+	public Validator(LogManager category) {
+		this.category = category;
+		this.categoryLogger = category.getLogger(getClass());
 	}
 	
-	public Validator(Logger logger) {
-		this.logger = logger;
-	}
-	
-	public void checkArgumentNotNull(Object argument, String message) {
-		if(argument == null) {
-			Errors.handleException(new IllegalArgumentException(message), logger);
+	protected <T> T check(final boolean condition,
+			final Supplier<RuntimeException> exceptionSupplier) {
+		if (!condition) {
+			return Errors.throwException(exceptionSupplier, categoryLogger);
 		}
+		return null;
 	}
 	
-	public void checkArgumentStringNotEmpty(String argument, String message) {
+	public <T> T checkState(final boolean condition, final String message, final Object... args) {
+		return check(condition, () -> new IllegalStateException(String.format(message, args)));
+	}
+	
+	public <T> T checkArgument(final boolean condition, final String message, final Object... args) {
+		return check(condition, () -> new IllegalArgumentException(String.format(message, args)));
+	}
+	
+	public <T> T checkArgumentNotNull(final Object argument, final String message) {
+		return checkArgument(Objects.nonNull(argument), message);
+	}
+	
+	public <T> T checkArgumentStringNotEmpty(final String argument, final String message) {
 		checkArgumentNotNull(argument, message);
-		if(argument.isEmpty()) {
-			Errors.handleException(new IllegalArgumentException(message), logger);
-		}
+		return checkArgument(!argument.isEmpty(), message);
 	}
 	
-	public void checkArgumentNonEmptyCollection(Collection<?> argument, String message) {
+	public <T> T checkArgumentNonEmptyCollection(final Collection<?> argument, 
+			final String message) {
 		checkArgumentNotNull(argument, message);
-		if(argument.isEmpty()) {
-			Errors.handleException(new IllegalArgumentException(message), logger);
-		}
+		return checkArgument(!argument.isEmpty(), message);
 	}
 	
-	public void checkArgumentEmptyCollection(Collection<?> argument, String message) {
+	public <T> T checkArgumentEmptyCollection(Collection<?> argument, String message) {
 		checkArgumentNotNull(argument, message);
-		if(!argument.isEmpty()) {
-			Errors.handleException(new IllegalArgumentException(message), logger);
-		}
+		return checkArgument(argument.isEmpty(), message);
 	}
 	
-	public void checkArgumentNotContains(Object argument, Collection<?> collection, String message) {
+	public <T> T checkArgumentNotContains(final Object argument, final Collection<?> collection, 
+			final String message) {
+		checkArgumentNotNull(collection, "The collection cannot be null");
+		return checkArgument(collection.contains(argument), message);
+	}
+	
+	public <T> T checkArgumentPositive(final long argument, final String message) {
 		checkArgumentNotNull(argument, message);
-		if(collection.contains(argument)) {
-			Errors.handleException(new IllegalArgumentException(message), logger);
-		}
+		return checkArgument(argument > 0, message);
 	}
 	
-	public void checkArgumentPositive(Long argument, String message) {
+	public <T> T checkArgumentPositive(final int argument, String message) {
 		checkArgumentNotNull(argument, message);
-		if(argument < 0) {
-			Errors.handleException(new IllegalArgumentException(message), logger);
-		}
+		return checkArgument(argument > 0, message);
 	}
 	
-	public void checkArgumentPositive(Integer argument, String message) {
-		checkArgumentNotNull(argument, message);
-		if(argument < 0) {
-			Errors.handleException(new IllegalArgumentException(message), logger);
-		}
+	public <T> T checkArgumentBetween(final int argument, final int min, final int max, 
+			final String message) {
+		return checkArgumentBetween(argument, min, max, message, message);
 	}
 	
-	public void checkArgumentBetween(int argument, int min, int max, String message) {
-		checkArgumentBetween(argument, min, max, message, message);
+	public <T> T checkArgumentBetween(final int argument, final int min, final int max, 
+			final String minMessage, final String maxMessage) {
+		checkArgument(argument > min, minMessage);
+		return checkArgument(argument < max, maxMessage);
 	}
 	
-	public void checkArgumentBetween(int argument, int min, int max, String minMessage, String maxMessage) {
-		if(argument < min) {
-			Errors.handleException(new IllegalArgumentException(minMessage), logger);
-		}
-		else if(argument > max) {
-			Errors.handleException(new IllegalArgumentException(maxMessage), logger);
-		}
-	}
-	
-	public void checkArgumentClass(Class<?> expected, Class<?> actual, String message) {
+	public <T> T checkArgumentClass(final Class<?> expected, final Class<?> actual, 
+			final String message) {
 		checkArgumentNotNull(actual, message);
-		if(!Objects.equals(expected, actual)) {
-			Errors.handleException(new IllegalArgumentException(message), logger);
-		}
+		checkArgumentNotNull(expected, "The expected class is null");
+		return checkArgument(Objects.equals(expected, actual), message);
 	}
 	
-	public void checkSingleEntryMap(Map<?, ?> map, String message) {
-		if(map.size() != 1) {
-			Errors.handleException(new RuntimeException(message), logger);
-		}
+	public <T> T checkSingleEntryMap(final Map<?, ?> map, final String message) {
+		checkArgumentNotNull(map, "The map is null");
+		return checkArgument(map.size() == 1, message);
 	}
 	
-	public void handleIOException(IOException cause) {
-		Errors.handleException(new RuntimeException(cause), logger);
+	public <T> T handleIOException(final IOException cause) {
+		return Errors.throwException(new RuntimeException(cause), categoryLogger);
 	}
 	
-	public <T> T invalidOperation(String message) {
-		return Errors.handleException(new UnsupportedOperationException(message), logger);
+	public <T> T invalidOperation(final String message) {
+		return Errors.throwException(new UnsupportedOperationException(message), categoryLogger);
 		
 	}
 	
-	public void runtimeException(String message) {
-		Errors.handleException(new RuntimeException(message), logger);
+	public <T> T runtimeException(final String message) {
+		return Errors.throwException(new RuntimeException(message), categoryLogger);
 	}
 	
-	public void runtimeException(Throwable cause) {
-		Errors.handleException(new RuntimeException(cause), logger);
+	public <T> T runtimeException(final Throwable cause) {
+		return Errors.throwException(new RuntimeException(cause), categoryLogger);
 	}
 	
-	public void runtimeException(String message, Throwable cause) {
-		Errors.handleException(new RuntimeException(message, cause), logger);
+	public <T> T runtimeException(final String message, final Throwable cause) {
+		return Errors.throwException(new RuntimeException(message, cause), categoryLogger);
+	}
+
+	public Logger getLogger(final Class<?> clazz) {
+		return category.getLogger(clazz);
 	}
 	
-	public void info(String message) {
-		logger.info(message);
-	}
-	
-	public void warning(String message) {
-		logger.warn(message);
-	}
 }

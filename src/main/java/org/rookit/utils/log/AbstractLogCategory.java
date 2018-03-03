@@ -19,24 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package log;
+package org.rookit.utils.log;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-import org.rookit.utils.log.Logs;
+import org.rookit.utils.resource.Resources;
 
 @SuppressWarnings("javadoc")
-public class LogTest {
-
-	@Test
-	public final void test() {
-		for(Logs log : Logs.values()) {
-			final Logger logger = log.getLogger();
-			assertNotNull(logger);
-			logger.info("Working!");
+public abstract class AbstractLogCategory implements LogCategory {
+	
+	@Override
+	public final Path getPath() {
+		final Path path = Resources.logPath().resolve(getName());
+		createDirectoryIfNotExists(path);
+		return path.resolve(getCurrentFileName());
+	}
+	
+	private String getCurrentFileName() {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		return LocalDate.now().format(formatter) + ".log";
+	}
+	
+	private static void createDirectoryIfNotExists(final Path path) {
+		try {
+			if(Files.notExists(path)) {
+				Files.createDirectories(path);
+			}
+		} catch (IOException e) {
+			throw new AssertionError("Could not create directory: " + path, e);
 		}
 	}
-
+	
 }
