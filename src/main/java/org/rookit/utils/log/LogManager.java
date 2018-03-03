@@ -50,7 +50,7 @@ public final class LogManager {
 		final LoggerConfig loggerConfig = new LoggerConfig(name, Level.ALL, false);
 		// Warns go to
 		loggerConfig.addAppender(fileAppender, Level.WARN, null);
-		loggerConfig.addAppender(errAppender, Level.ALL, null);
+		loggerConfig.addAppender(errAppender, Level.WARN, null);
 		// Info goes to
 		loggerConfig.addAppender(outAppender, Level.INFO, LevelRangeFilter.createFilter(Level.INFO, Level.INFO, null, null));
 
