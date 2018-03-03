@@ -29,6 +29,8 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.Range;
+
 @SuppressWarnings("javadoc")
 public abstract class Validator {
 	
@@ -79,7 +81,7 @@ public abstract class Validator {
 	public <T> T checkArgumentNotContains(final Object argument, final Collection<?> collection, 
 			final String message) {
 		checkArgumentNotNull(collection, "The collection cannot be null");
-		return checkArgument(collection.contains(argument), message);
+		return checkArgument(!collection.contains(argument), message);
 	}
 	
 	public <T> T checkArgumentPositive(final long argument, final String message) {
@@ -97,10 +99,39 @@ public abstract class Validator {
 		return checkArgumentBetween(argument, min, max, message, message);
 	}
 	
+	public <T> T checkArgumentBetween(final double argument, 
+			final double min, 
+			final double max,
+			final String message) {
+		return checkArgumentBetween(argument, min, max, message, message);
+	}
+	
+	public <T> T checkArgumentBetween(final double argument, 
+			final double min, 
+			final double max, 
+			final String minMessage, 
+			final String maxMessage) {
+		checkArgument(argument >= min, minMessage);
+		return checkArgument(argument <= max, maxMessage);
+	}
+	
+	public <T, R extends Comparable<R>> T checkArgumentBetween(final R argument, 
+			final Range<R> range, 
+			final String argumentName) {
+		final StringBuilder msgBuilder = new StringBuilder("Range for ")
+				.append(argumentName)
+				.append(" is ")
+				.append(range)
+				.append(" but value is ")
+				.append(argument);
+		
+		return checkArgument(range.contains(argument), msgBuilder.toString());
+	}
+	
 	public <T> T checkArgumentBetween(final int argument, final int min, final int max, 
 			final String minMessage, final String maxMessage) {
-		checkArgument(argument > min, minMessage);
-		return checkArgument(argument < max, maxMessage);
+		checkArgument(argument >= min, minMessage);
+		return checkArgument(argument <= max, maxMessage);
 	}
 	
 	public <T> T checkArgumentClass(final Class<?> expected, final Class<?> actual, 
