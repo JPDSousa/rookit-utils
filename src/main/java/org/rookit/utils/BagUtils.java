@@ -2,11 +2,10 @@ package org.rookit.utils;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.commons.collections4.Bag;
 import org.apache.commons.collections4.bag.HashBag;
-
-import com.google.common.base.Optional;
 
 @SuppressWarnings("javadoc")
 public abstract class BagUtils {
@@ -25,7 +24,7 @@ public abstract class BagUtils {
 			}
 		}
 		
-		return Optional.fromNullable(maxElement);
+		return Optional.ofNullable(maxElement);
 	}
 	
 	public static <T> Bag<T> newHashBag(final T initial) {
