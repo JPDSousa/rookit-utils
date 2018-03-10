@@ -22,14 +22,9 @@
 package org.rookit.utils.log;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Supplier;
 
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Range;
 
 @SuppressWarnings("javadoc")
 public abstract class Validator {
@@ -37,113 +32,22 @@ public abstract class Validator {
 	private final LogManager category;
 	private final Logger categoryLogger;
 	
-	public Validator(LogManager category) {
+	private final ObjectValidator stateValidator;
+	private final ObjectValidator argumentValidator;
+	
+	public Validator(final LogManager category) {
 		this.category = category;
 		this.categoryLogger = category.getLogger(getClass());
+		this.stateValidator = new ObjectValidator(this.categoryLogger, IllegalStateException::new);
+		this.argumentValidator = new ObjectValidator(this.categoryLogger, IllegalArgumentException::new);
 	}
 	
-	protected <T> T check(final boolean condition,
-			final Supplier<RuntimeException> exceptionSupplier) {
-		if (!condition) {
-			return Errors.throwException(exceptionSupplier, categoryLogger);
-		}
-		return null;
+	public final ObjectValidator checkState() {
+		return this.stateValidator;
 	}
 	
-	public <T> T checkState(final boolean condition, final String message, final Object... args) {
-		return check(condition, () -> new IllegalStateException(String.format(message, args)));
-	}
-	
-	public <T> T checkArgument(final boolean condition, final String message, final Object... args) {
-		return check(condition, () -> new IllegalArgumentException(String.format(message, args)));
-	}
-	
-	public <T> T checkArgumentNotNull(final Object argument, final String message) {
-		return checkArgument(Objects.nonNull(argument), message);
-	}
-	
-	public <T> T checkArgumentStringNotEmpty(final String argument, final String message) {
-		checkArgumentNotNull(argument, message);
-		return checkArgument(!argument.isEmpty(), message);
-	}
-	
-	public <T> T checkArgumentNonEmptyCollection(final Collection<?> argument, 
-			final String message) {
-		checkArgumentNotNull(argument, message);
-		return checkArgument(!argument.isEmpty(), message);
-	}
-	
-	public <T> T checkArgumentEmptyCollection(Collection<?> argument, String message) {
-		checkArgumentNotNull(argument, message);
-		return checkArgument(argument.isEmpty(), message);
-	}
-	
-	public <T> T checkArgumentNotContains(final Object argument, final Collection<?> collection, 
-			final String message) {
-		checkArgumentNotNull(collection, "The collection cannot be null");
-		return checkArgument(!collection.contains(argument), message);
-	}
-	
-	public <T> T checkArgumentPositive(final long argument, final String message) {
-		checkArgumentNotNull(argument, message);
-		return checkArgument(argument > 0, message);
-	}
-	
-	public <T> T checkArgumentPositive(final int argument, String message) {
-		checkArgumentNotNull(argument, message);
-		return checkArgument(argument > 0, message);
-	}
-	
-	public <T> T checkArgumentBetween(final int argument, final int min, final int max, 
-			final String message) {
-		return checkArgumentBetween(argument, min, max, message, message);
-	}
-	
-	public <T> T checkArgumentBetween(final double argument, 
-			final double min, 
-			final double max,
-			final String message) {
-		return checkArgumentBetween(argument, min, max, message, message);
-	}
-	
-	public <T> T checkArgumentBetween(final double argument, 
-			final double min, 
-			final double max, 
-			final String minMessage, 
-			final String maxMessage) {
-		checkArgument(argument >= min, minMessage);
-		return checkArgument(argument <= max, maxMessage);
-	}
-	
-	public <T, R extends Comparable<R>> T checkArgumentBetween(final R argument, 
-			final Range<R> range, 
-			final String argumentName) {
-		final StringBuilder msgBuilder = new StringBuilder("Range for ")
-				.append(argumentName)
-				.append(" is ")
-				.append(range)
-				.append(" but value is ")
-				.append(argument);
-		
-		return checkArgument(range.contains(argument), msgBuilder.toString());
-	}
-	
-	public <T> T checkArgumentBetween(final int argument, final int min, final int max, 
-			final String minMessage, final String maxMessage) {
-		checkArgument(argument >= min, minMessage);
-		return checkArgument(argument <= max, maxMessage);
-	}
-	
-	public <T> T checkArgumentClass(final Class<?> expected, final Class<?> actual, 
-			final String message) {
-		checkArgumentNotNull(actual, message);
-		checkArgumentNotNull(expected, "The expected class is null");
-		return checkArgument(Objects.equals(expected, actual), message);
-	}
-	
-	public <T> T checkSingleEntryMap(final Map<?, ?> map, final String message) {
-		checkArgumentNotNull(map, "The map is null");
-		return checkArgument(map.size() == 1, message);
+	public final ObjectValidator checkArgument() {
+		return this.argumentValidator;
 	}
 	
 	public <T> T handleIOException(final IOException cause) {
