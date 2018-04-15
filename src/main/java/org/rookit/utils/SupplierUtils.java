@@ -7,16 +7,17 @@ import java.util.function.Supplier;
 @SuppressWarnings("javadoc")
 public abstract class SupplierUtils {
 
-	public static IntSupplier incrementalSupplier(final int lowerBound) {
-		final AtomicInteger state = new AtomicInteger(lowerBound);
-		
-		return () -> state.getAndIncrement();
-	}
-	
-	public static <T> Supplier<T> fixedValueSupplier(T fixedValue) {
-		return () -> fixedValue;
-	}
-	
-	private SupplierUtils() {}
-	
+    public static <T> Supplier<T> fixedValueSupplier(final T fixedValue) {
+        return () -> fixedValue;
+    }
+
+    public static IntSupplier incrementalSupplier(final int lowerBound) {
+        final AtomicInteger state = new AtomicInteger(lowerBound);
+
+        return () -> state.getAndIncrement();
+    }
+
+    private SupplierUtils() {
+    }
+
 }
