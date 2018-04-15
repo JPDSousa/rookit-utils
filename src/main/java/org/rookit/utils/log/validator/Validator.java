@@ -20,23 +20,43 @@
  * SOFTWARE.
  ******************************************************************************/
 
-package org.rookit.utils.log;
-
-import java.util.function.Supplier;
+package org.rookit.utils.log.validator;
 
 import org.apache.logging.log4j.Logger;
+import org.rookit.utils.log.LogManager;
 
 @SuppressWarnings("javadoc")
-public class Errors {
+public abstract class Validator {
 
-    public static <T> T throwException(final RuntimeException cause, final Logger logger) {
-        logger.error(cause.getMessage(), cause);
-        throw cause;
+    private final LogManager category;
+    private final Logger categoryLogger;
+    private final ExceptionHandler exceptionHandler;
+
+    private final ObjectValidator stateValidator;
+    private final ObjectValidator argumentValidator;
+
+    public Validator(final LogManager category) {
+        this.category = category;
+        this.categoryLogger = category.getLogger(getClass());
+        this.stateValidator = new ObjectValidator(this.categoryLogger, IllegalStateException::new);
+        this.argumentValidator = new ObjectValidator(this.categoryLogger, IllegalArgumentException::new);
+        this.exceptionHandler = new ExceptionHandler(this.categoryLogger);
     }
 
-    public static <T> T throwException(final Supplier<RuntimeException> causeSupplier,
-            final Logger logger) {
-        return throwException(causeSupplier.get(), logger);
+    public final ObjectValidator checkArgument() {
+        return this.argumentValidator;
+    }
+
+    public final ObjectValidator checkState() {
+        return this.stateValidator;
+    }
+
+    public Logger getLogger(final Class<?> clazz) {
+        return this.category.getLogger(clazz);
+    }
+
+    public final ExceptionHandler handleException() {
+        return this.exceptionHandler;
     }
 
 }
