@@ -27,16 +27,16 @@ import java.util.Objects;
 
 import javax.annotation.Generated;
 
-import org.rookit.utils.log.validator.Validator;
+import org.rookit.utils.log.validator.AbstractValidator;
 
 @SuppressWarnings("javadoc")
 public abstract class AbstractIdempotentBuilder<P> implements Builder<P> {
 
-    private final Validator validator;
+    private final AbstractValidator validator;
 
     private P builtObject;
 
-    protected AbstractIdempotentBuilder(final Validator validator) {
+    protected AbstractIdempotentBuilder(final AbstractValidator validator) {
         this.validator = validator;
     }
 
