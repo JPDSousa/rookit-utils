@@ -21,10 +21,11 @@
  ******************************************************************************/
 package org.rookit.utils.log.validator;
 
-import java.io.IOException;
-
 import org.apache.logging.log4j.Logger;
 import org.rookit.utils.log.Errors;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("javadoc")
 public class ExceptionHandler {
@@ -49,10 +50,18 @@ public class ExceptionHandler {
     }
 
     public <T> T runtimeException(final Throwable cause) {
+        if (cause instanceof RuntimeException) {
+            return Errors.throwException((RuntimeException) cause, this.logger);
+        }
         return Errors.throwException(new RuntimeException(cause), this.logger);
     }
 
-    public <T> T unsupportedOperation(final String message) {
-        return Errors.throwException(new UnsupportedOperationException(message), this.logger);
+    public <T> T invocationTargetException(final InvocationTargetException cause) {
+        return runtimeException(cause.getCause());
     }
+
+    public <T> T unsupportedOperation(final String message, final Object... args) {
+        return Errors.throwException(new UnsupportedOperationException(String.format(message, args)), this.logger);
+    }
+
 }
