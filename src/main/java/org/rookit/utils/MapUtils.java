@@ -19,20 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
+
 package org.rookit.utils;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @SuppressWarnings("javadoc")
-public class MapUtils {
-
-    public static <A> Optional<A> get(final Map<String, Object> data,
-            final String name,
-            final Class<? extends A> clazz) {
-        return Optional.ofNullable(data.get(name))
-                .filter(clazz::isInstance)
-                .map(clazz::cast);
+public final class MapUtils {
+    
+    public static <K, V> V getOrDefault(final Map<K, V> map, final K key, final Supplier<V> supplier) {
+        return Optional.ofNullable(map.get(key))
+                .orElseGet(supplier);
     }
 
     private MapUtils() {
