@@ -19,23 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.datamap;
+package org.rookit.utils.convention;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
 
-public interface DataMap extends Map<String, Object> {
+public interface Properties {
 
-    OptionalInt getInt(String key);
-
-    Optional<String> getString(String key);
-
-    <T> Optional<T> get(String key, Class<T> clazz);
-
-    DataMap getDataMap(String key);
-
-    <T> Collection<T> getCollection(String key, Class<T> clazz);
+    Collection<Property> properties();
 
 }
