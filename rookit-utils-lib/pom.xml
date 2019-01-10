@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>rookit-utils</artifactId>
+        <groupId>com.github.JPDSousa</groupId>
+        <version>-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>rookit-utils-lib</artifactId>
+
+    <name>Rookit Utils Lib</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>${rookit.group}</groupId>
+            <artifactId>rookit-utils-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${rookit.group}</groupId>
+            <artifactId>rookit-failsafe-api</artifactId>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>${rookit.group}</groupId>
+            <artifactId>rookit-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${rookit.group}</groupId>
+                <artifactId>rookit-utils-api</artifactId>
+                <version>${rookit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${rookit.group}</groupId>
+                <artifactId>rookit-failsafe-api</artifactId>
+                <version>${rookit.version}</version>
+            </dependency>
+            <!-- Test dependencies -->
+            <dependency>
+                <groupId>${rookit.group}</groupId>
+                <artifactId>rookit-test</artifactId>
+                <version>${rookit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
