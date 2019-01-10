@@ -7,6 +7,9 @@
         <artifactId>rookit</artifactId>
         <version>-SNAPSHOT</version>
     </parent>
+
+    <name>Rookit Utils</name>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
