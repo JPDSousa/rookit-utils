@@ -20,30 +20,28 @@
  * SOFTWARE.
  ******************************************************************************/
 
-package org.rookit.utils;
-
-import org.rookit.utils.function.ToShortFunction;
-import org.rookit.utils.optional.OptionalShort;
+package org.rookit.utils.optional;
 
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.function.ToIntFunction;
 
 @SuppressWarnings({"javadoc", "OptionalUsedAsFieldOrParameterType"})
-public final class OptionalUtils {
+public final class OptionalUtilsImpl implements OptionalUtils {
 
-    public static boolean isAllPresent(final Optional<?>... optionals) {
+    public static OptionalUtils create() {
+        return new OptionalUtilsImpl();
+    }
+
+    private OptionalUtilsImpl() {
+    }
+
+    @Override
+    public boolean isAllPresent(final Optional<?>... optionals) {
         return Arrays.stream(optionals)
                 .allMatch(Optional::isPresent);
     }
 
-    public static <T> Optional<T> orElse(final Optional<T> optional, final Optional<T> fallback) {
-        return optional.isPresent() ? optional : fallback;
-    }
-
-    public static <T extends Comparable<T>> int compare(final Optional<T> left, final Optional<T> right) {
+    @Override
+    public <T extends Comparable<T>> int compare(final Optional<T> left, final Optional<T> right) {
         if (isAllPresent(left, right)) {
             return left.get().compareTo(right.get());
         }
@@ -56,21 +54,4 @@ public final class OptionalUtils {
         return -1;
     }
 
-    public static <T> boolean contains(final Optional<T> optional, final T expected) {
-        return optional.isPresent()
-                && Objects.equals(optional.get(), expected);
-    }
-
-    private OptionalUtils() {
-    }
-
-    public static <T> OptionalInt mapToInt(final Optional<T> optional, final ToIntFunction<T> numberExtractor) {
-        return optional.map(t -> OptionalInt.of(numberExtractor.applyAsInt(t)))
-                .orElseGet(OptionalInt::empty);
-    }
-
-    public static <T> OptionalShort mapToShort(final Optional<T> optional, final ToShortFunction<T> numberExtractor) {
-        return optional.map(t -> OptionalShort.of(numberExtractor.apply(t)))
-                .orElseGet(OptionalShort::empty);
-    }
 }

@@ -2,6 +2,9 @@ package org.rookit.utils.optional;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 
+import javax.annotation.concurrent.Immutable;
+
+@Immutable
 class EmptyBoolean implements OptionalBoolean {
 
     @Override

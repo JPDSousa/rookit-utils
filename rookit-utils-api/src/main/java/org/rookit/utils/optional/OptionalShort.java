@@ -7,17 +7,6 @@ import java.util.function.Supplier;
 
 public interface OptionalShort {
 
-    @SuppressWarnings("ConstantDeclaredInInterface")
-    OptionalShort EMPTY = new EmptyShort();
-
-    static OptionalShort of(final short value) {
-        return new SomeShort(value);
-    }
-
-    static OptionalShort empty() {
-        return EMPTY;
-    }
-
     boolean isPresent();
 
     short getAsShort();

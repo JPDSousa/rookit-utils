@@ -2,6 +2,9 @@ package org.rookit.utils.optional;
 
 import it.unimi.dsi.fastutil.shorts.ShortConsumer;
 
+import javax.annotation.concurrent.Immutable;
+
+@Immutable
 class EmptyShort implements OptionalShort {
 
     @Override

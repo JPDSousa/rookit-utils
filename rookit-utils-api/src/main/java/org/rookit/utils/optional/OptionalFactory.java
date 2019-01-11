@@ -19,39 +19,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
+package org.rookit.utils.optional;
 
-package org.rookit.utils;
+import java.util.Objects;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+public interface OptionalFactory {
 
-@SuppressWarnings("javadoc")
-public class MethodUtils {
+    <T> Optional<T> empty();
 
-    @SuppressWarnings("OverlyBroadThrowsClause")
-    public static Object forceInvokeMethod(final Object invoked,
-                                           final Method method,
-                                           final Object... args) throws Throwable {
-        final boolean isAccessible = method.isAccessible();
-        if (!isAccessible) {
-            method.setAccessible(true);
+    <T> Optional<T> of(T value);
+
+    default <T> Optional<T> ofNullable(final T value) {
+        if (Objects.isNull(value)) {
+            return empty();
         }
-        try {
-            return method.invoke(invoked, args);
-        } catch (final InvocationTargetException e) {
-            throw e.getTargetException();
-        } finally {
-            if (!isAccessible) {
-                method.setAccessible(false);
-            }
-        }
+        return of(value);
     }
 
-    public static boolean hasReturnTypeOf(final Method method, final Class<?> expectedReturnType) {
-        return expectedReturnType.isAssignableFrom(method.getReturnType());
+    OptionalShort emptyShort();
+
+    OptionalShort ofShort(short value);
+
+    OptionalBoolean emptyBoolean();
+
+    @SuppressWarnings("BooleanParameter")
+    OptionalBoolean ofBoolean(boolean value);
+
+    default OptionalBoolean ofNullableBoolean(final Boolean value) {
+        if (Objects.isNull(value)) {
+            return emptyBoolean();
+        }
+        //noinspection AutoUnboxing
+        return ofBoolean(value);
     }
 
-    private MethodUtils() {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    default <T> Optional<T> fromJavaOptional(final java.util.Optional<T> optional) {
+        return optional.map(this::of)
+                .orElse(empty());
+    }
+
+    @SuppressWarnings({"Guava", "OptionalUsedAsFieldOrParameterType"})
+    default <T> Optional<T> fromGuavaOptional(final com.google.common.base.Optional<T> optional) {
+        return optional.transform(this::of)
+                .or(empty());
     }
 
 }

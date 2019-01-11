@@ -2,7 +2,9 @@ package org.rookit.utils.optional;
 
 import com.google.common.base.MoreObjects;
 import it.unimi.dsi.fastutil.shorts.ShortConsumer;
+import org.immutables.value.internal.$processor$.meta.$ValueMirrors;
 
+@$ValueMirrors.Immutable
 final class SomeShort implements OptionalShort {
 
     private final short value;
@@ -30,7 +32,7 @@ final class SomeShort implements OptionalShort {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("value", value)
+                .add("value", this.value)
                 .toString();
     }
 }
