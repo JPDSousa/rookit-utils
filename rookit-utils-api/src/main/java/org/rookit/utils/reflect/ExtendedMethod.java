@@ -19,17 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils;
 
-import java.time.Duration;
+package org.rookit.utils.reflect;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 @SuppressWarnings("javadoc")
-public abstract class DurationUtils {
+public interface ExtendedMethod extends Function<Object[], Optional<Object>> {
+    
+    boolean isAccessible();
+    
+    String name();
 
-    public static Duration plus(final Duration one, final Duration another) {
-        return one.plus(another);
-    }
+    Class<?>[] arguments();
 
-    private DurationUtils() {
-    }
+    Class<?> returnType();
+
+    boolean returnsVoid();
+
 }

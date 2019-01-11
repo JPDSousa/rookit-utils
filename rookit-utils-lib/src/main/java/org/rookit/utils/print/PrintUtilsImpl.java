@@ -21,19 +21,29 @@
  ******************************************************************************/
 package org.rookit.utils.print;
 
+import com.google.inject.Inject;
+import org.apache.commons.collections4.IterableUtils;
+
 import java.time.Duration;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.collections4.IterableUtils;
-
 @SuppressWarnings("javadoc")
-public final class PrintUtils {
+public final class PrintUtilsImpl implements PrintUtils {
 
     private static final Duration ONE_HOUR = Duration.ofHours(1);
 
-    public static String duration(final Duration duration) {
+    public static PrintUtils create() {
+        return new PrintUtilsImpl();
+    }
+
+    @Inject
+    private PrintUtilsImpl() {
+    }
+
+    @Override
+    public String duration(final Duration duration) {
         if (duration.minus(ONE_HOUR).isNegative()) {
             return new StringBuilder(5).append(normalizeUnit(duration.toMinutes()))
                     .append(':')
@@ -43,56 +53,64 @@ public final class PrintUtils {
         return duration3layer(duration);
     }
 
-    public static <T> String getIterableAsString(final Iterable<T> elements, final char separator) {
+    @Override
+    public <T> String getIterableAsString(final Iterable<T> elements, final char separator) {
         return getIterableAsString(elements, Character.toString(separator));
     }
 
-    public static <T> String getIterableAsString(final Iterable<T> elements,
-            final char separator,
-            final String emptyMessage) {
+    @Override
+    public <T> String getIterableAsString(final Iterable<T> elements,
+                                          final char separator,
+                                          final String emptyMessage) {
         return getIterableAsString(elements, Character.toString(separator), emptyMessage);
     }
 
-    public static <T> String getIterableAsString(final Iterable<T> elements,
-            final Function<T, String> toString,
-            final String separator) {
+    @Override
+    public <T> String getIterableAsString(final Iterable<T> elements,
+                                          final Function<T, String> toString,
+                                          final String separator) {
         return StreamSupport.stream(elements.spliterator(), false)
                 .map(toString)
                 .collect(Collectors.joining(separator));
     }
 
-    public static <T> String getIterableAsString(final Iterable<T> elements,
-            final Function<T, String> toString,
-            final TypeFormat format) {
+    @Override
+    public <T> String getIterableAsString(final Iterable<T> elements,
+                                          final Function<T, String> toString,
+                                          final FormatType format) {
         return getIterableAsString(elements, toString, format.getSeparator());
     }
 
-    public static <T> String getIterableAsString(final Iterable<T> elements, final String separator) {
+    @Override
+    public <T> String getIterableAsString(final Iterable<T> elements, final String separator) {
         return StreamSupport.stream(elements.spliterator(), false)
                 .map(Object::toString)
                 .collect(Collectors.joining(separator));
     }
 
-    public static <T> String getIterableAsString(final Iterable<T> elements,
-            final String separator,
-            final String emptyMessage) {
+    @Override
+    public <T> String getIterableAsString(final Iterable<T> elements,
+                                          final String separator,
+                                          final String emptyMessage) {
         if (IterableUtils.isEmpty(elements)) {
             return emptyMessage;
         }
         return getIterableAsString(elements, Object::toString, separator);
     }
 
-    public static <T> String getIterableAsString(final Iterable<T> elements, final TypeFormat format) {
+    @Override
+    public <T> String getIterableAsString(final Iterable<T> elements, final FormatType format) {
         return getIterableAsString(elements, format.getSeparator());
     }
 
-    public static <T> String getIterableAsString(final Iterable<T> elements,
-            final TypeFormat format,
-            final String emptyMessage) {
+    @Override
+    public <T> String getIterableAsString(final Iterable<T> elements,
+                                          final FormatType format,
+                                          final String emptyMessage) {
         return getIterableAsString(elements, format.getSeparator(), emptyMessage);
     }
 
-    private static String duration3layer(final Duration duration) {
+    private String duration3layer(final Duration duration) {
         return new StringBuilder(10).append(normalizeUnit(duration.toHours()))
                 .append(':')
                 .append(normalizeUnit(duration.toMinutes() % 60))
@@ -101,14 +119,11 @@ public final class PrintUtils {
                 .toString();
     }
 
-    private static String normalizeUnit(final long unit) {
+    private String normalizeUnit(final long unit) {
         if (unit < 10) {
             return '0' + Long.toString(unit);
         }
         return String.valueOf(unit);
-    }
-
-    private PrintUtils() {
     }
 
 }

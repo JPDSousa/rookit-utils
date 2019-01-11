@@ -19,12 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.convention;
+package org.rookit.utils.repetition;
 
-import java.util.Collection;
+public interface Repetition {
 
-public interface Properties {
+    boolean isMulti();
 
-    Collection<Property> properties();
+    boolean isKeyed();
+
+    boolean isOptional();
 
 }

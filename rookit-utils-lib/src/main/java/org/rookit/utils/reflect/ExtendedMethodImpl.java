@@ -22,22 +22,20 @@
 
 package org.rookit.utils.reflect;
 
-import com.google.common.base.MoreObjects;
-import org.rookit.utils.log.validator.UtilsValidator;
-import org.rookit.utils.log.validator.Validator;
+import org.rookit.failsafe.Failsafe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-final class MethodEnricherImpl implements MethodEnricher {
+final class ExtendedMethodImpl implements ExtendedMethod {
 
-    private static final Validator VALIDATOR = UtilsValidator.getDefault();
-
+    private final Failsafe failsafe;
     private final Object invoker;
     private final Method method;
 
-    MethodEnricherImpl(final Object invoker, final Method method) {
+    ExtendedMethodImpl(final Failsafe failsafe, final Object invoker, final Method method) {
+        this.failsafe = failsafe;
         this.invoker = invoker;
         this.method = method;
     }
@@ -80,9 +78,9 @@ final class MethodEnricherImpl implements MethodEnricher {
             method.setAccessible(true);
             return Optional.of(method.invoke(this.invoker, args));
         } catch (final IllegalAccessException | IllegalArgumentException e) {
-            return VALIDATOR.handleException().runtimeException(e);
+            return this.failsafe.handleException().runtimeException(e);
         } catch (final InvocationTargetException e) {
-            return VALIDATOR.handleException().invocationTargetException(e);
+            return this.failsafe.handleException().invocationTargetException(e);
         } finally {
             method.setAccessible(isAccessible);
         }
@@ -90,9 +88,10 @@ final class MethodEnricherImpl implements MethodEnricher {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("invoker", this.invoker)
-                .add("method", this.method)
-                .toString();
+        return "ExtendedMethodImpl{" +
+                "failsafe=" + this.failsafe +
+                ", invoker=" + this.invoker +
+                ", method=" + this.method +
+                "}";
     }
 }
