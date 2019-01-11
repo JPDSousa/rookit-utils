@@ -19,16 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.convention.annotation;
+package org.rookit.utils.string;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.rookit.utils.optional.Optional;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+public interface StringUtils {
 
-@SuppressWarnings("javadoc")
-@Retention(SOURCE)
-@Target(TYPE)
-public @interface PartialEntity {
+    int countMatchesIgnoreCase(String str, String sub);
+
+    Optional<String> getWithin(String str, String init, String end);
+
+    String preview(String content, int characters);
 }
