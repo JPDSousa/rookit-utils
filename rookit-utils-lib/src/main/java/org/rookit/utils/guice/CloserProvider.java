@@ -19,31 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.convention;
+package org.rookit.utils.guice;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.io.Closer;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
-public class BaseProperty implements Property {
+public final class CloserProvider implements Provider<Closer> {
 
-    public static Property create(final String name) {
-        return new BaseProperty(name);
+    public static Provider<Closer> create() {
+        return new CloserProvider();
     }
 
-    private final String name;
-
-    protected BaseProperty(final String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String propertyName() {
-        return this.name;
+    @Inject
+    private CloserProvider() {
     }
 
     @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("propertyName", this.name)
-                .toString();
+    public Closer get() {
+        return Closer.create();
     }
+
 }
