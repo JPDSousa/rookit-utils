@@ -19,13 +19,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.builder;
+package org.rookit.utils.primitive;
 
-import java.util.stream.Stream;
+import com.google.inject.Inject;
 
 @SuppressWarnings("javadoc")
-public interface StreamGenerator<I, O> {
+public final class ShortUtilsImpl implements ShortUtils {
 
-    Stream<O> generate(I input);
+    public static ShortUtils create() {
+        return new ShortUtilsImpl();
+    }
+
+    @Inject
+    private ShortUtilsImpl() { }
+
+    @Override
+    public boolean isCastable(final int value) {
+        return (value <= Short.MAX_VALUE) && (value >= Short.MIN_VALUE);
+    }
+
+    @Override
+    public boolean isCastable(final String value) {
+        try {
+            Short.valueOf(value);
+            return true;
+        } catch (final NumberFormatException e) {
+            return false;
+        }
+    }
 
 }

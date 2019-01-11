@@ -19,25 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils;
+package org.rookit.utils.primitive;
+
+import com.google.inject.Inject;
+
+import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("javadoc")
-public abstract class ShortUtils {
+public final class VoidUtilsImpl implements VoidUtils {
 
-    public static boolean isCastable(final int value) {
-        return value <= Short.MAX_VALUE && value >= Short.MIN_VALUE;
+    public static VoidUtils create() {
+        return new VoidUtilsImpl();
     }
 
-    public static boolean isCastable(final String value) {
-        try {
-            Short.valueOf(value);
-            return true;
-        } catch (final NumberFormatException e) {
-            return false;
-        }
+    @Inject
+    private VoidUtilsImpl() { }
+
+    @Override
+    public Void returnVoid() {
+        return null;
     }
 
-    private ShortUtils() {
+    @Override
+    public CompletableFuture<Void> completeVoid() {
+        return CompletableFuture.completedFuture(returnVoid());
     }
 
 }
