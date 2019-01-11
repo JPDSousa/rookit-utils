@@ -36,7 +36,7 @@ public final class StringTokenizer implements Iterator<Token> {
         synchronized (this.contextLock) {
             final int delimiterIndex = this.context.indexOf(this.delimiter);
             if (delimiterIndex >= 0) {
-                final Token next = org.rookit.utils.string.tokenizer.ImmutableToken.builder()
+                final Token next = ImmutableToken.builder()
                         .token(this.context.substring(0, delimiterIndex))
                         .payload(this.context.substring(delimiterIndex + this.delimiter.length()))
                         .build();
