@@ -19,10 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.convention;
+package org.rookit.utils.function;
 
 @FunctionalInterface
-public interface Property {
+public interface ToBooleanFunction<T> {
 
-    String propertyName();
+    boolean apply(T value);
+
 }

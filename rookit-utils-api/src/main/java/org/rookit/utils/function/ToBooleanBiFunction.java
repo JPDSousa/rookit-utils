@@ -19,16 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.convention.annotation;
+package org.rookit.utils.function;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+@FunctionalInterface
+public interface ToBooleanBiFunction<T, U> {
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+    boolean apply(T value1, U value2);
 
-@SuppressWarnings("javadoc")
-@Retention(SOURCE)
-@Target(TYPE)
-public @interface PropertyContainer {
 }
