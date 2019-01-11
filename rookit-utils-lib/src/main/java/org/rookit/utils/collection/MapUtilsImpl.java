@@ -20,21 +20,28 @@
  * SOFTWARE.
  ******************************************************************************/
 
-package org.rookit.utils;
+package org.rookit.utils.collection;
+
+import com.google.inject.Inject;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 @SuppressWarnings("javadoc")
-public final class MapUtils {
-    
-    public static <K, V> V getOrDefault(final Map<K, V> map, final K key, final Supplier<V> supplier) {
-        return Optional.ofNullable(map.get(key))
-                .orElseGet(supplier);
+public final class MapUtilsImpl implements MapUtils {
+
+    public static MapUtils create() {
+        return new MapUtilsImpl();
     }
 
-    private MapUtils() {
+    @Inject
+    private MapUtilsImpl() { }
+
+    @Override
+    public <K, V> V getOrDefault(final Map<K, V> map, final K key, final Supplier<V> supplier) {
+        return Optional.ofNullable(map.get(key))
+                .orElseGet(supplier);
     }
 
 }

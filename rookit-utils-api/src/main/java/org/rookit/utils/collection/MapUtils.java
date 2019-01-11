@@ -19,16 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.convention.annotation;
+package org.rookit.utils.collection;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import java.util.Map;
+import java.util.function.Supplier;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+public interface MapUtils {
 
-@SuppressWarnings("javadoc")
-@Retention(SOURCE)
-@Target(METHOD)
-public @interface PropertySetter {
+    <K, V> V getOrDefault(Map<K, V> map, K key, Supplier<V> supplier);
 }
