@@ -40,6 +40,8 @@ import org.rookit.utils.string.StringUtils;
 import org.rookit.utils.string.StringUtilsImpl;
 import org.rookit.utils.supplier.SupplierUtils;
 import org.rookit.utils.supplier.SupplierUtilsImpl;
+import org.rookit.utils.type.BaseExtendedClassFactory;
+import org.rookit.utils.type.ExtendedClassFactory;
 
 public final class UtilsModule extends AbstractModule {
 
@@ -64,5 +66,6 @@ public final class UtilsModule extends AbstractModule {
         //bind(PrintUtils.class).to(PrintUtilsImpl.class).in(Singleton.class);
         bind(OptionalFactory.class).to(OptionalFactoryImpl.class).in(Singleton.class);
         bind(StringUtils.class).to(StringUtilsImpl.class).in(Singleton.class);
+        bind(ExtendedClassFactory.class).to(BaseExtendedClassFactory.class).in(Singleton.class);
     }
 }

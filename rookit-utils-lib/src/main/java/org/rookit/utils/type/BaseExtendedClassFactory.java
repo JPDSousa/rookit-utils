@@ -21,8 +21,20 @@
  ******************************************************************************/
 package org.rookit.utils.type;
 
-public interface ExtendedClassFactory {
+import com.google.inject.Inject;
 
-    <T> ExtendedClass<T> create(Class<T> clazz);
+public final class BaseExtendedClassFactory implements ExtendedClassFactory {
+
+    public static ExtendedClassFactory create() {
+        return new BaseExtendedClassFactory();
+    }
+
+    @Inject
+    private BaseExtendedClassFactory() {}
+
+    @Override
+    public <T> ExtendedClass<T> create(final Class<T> clazz) {
+        return new ExtendedClassImpl<>(clazz);
+    }
 
 }
