@@ -3,20 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>com.github.JPDSousa.rookit-utils</groupId>
         <artifactId>rookit-utils</artifactId>
-        <groupId>com.github.JPDSousa</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rookit-utils-lib</artifactId>
+    <artifactId>lib</artifactId>
 
     <name>Rookit Utils Lib</name>
 
     <dependencies>
         <dependency>
-            <groupId>${rookit.group}</groupId>
-            <artifactId>rookit-utils-api</artifactId>
+            <groupId>${rookit.group}.rookit-utils</groupId>
+            <artifactId>api</artifactId>
         </dependency>
         <dependency>
             <groupId>${rookit.group}</groupId>
@@ -33,8 +33,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>${rookit.group}</groupId>
-                <artifactId>rookit-utils-api</artifactId>
+                <groupId>${rookit.group}.rookit-utils</groupId>
+                <artifactId>api</artifactId>
                 <version>${rookit.version}</version>
             </dependency>
             <dependency>
