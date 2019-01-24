@@ -15,7 +15,7 @@
 
     <modules>
         <module>api</module>
-        <!--<module>lib</module>-->
+        <module>lib</module>
     </modules>
 
     <name>Rookit Utils</name>
