@@ -24,25 +24,47 @@ package org.rookit.utils.reflect;
 
 import org.rookit.failsafe.Failsafe;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
-final class ExtendedMethodImpl implements ExtendedMethod {
+final class ExtendedMethodImpl<C, R> implements ExtendedMethod<C, R> {
 
     private final Failsafe failsafe;
-    private final Object invoker;
+    private final ExtendedClass<C> clazz;
     private final Method method;
+    private final ExtendedClassFactory classFactory;
 
-    ExtendedMethodImpl(final Failsafe failsafe, final Object invoker, final Method method) {
+    ExtendedMethodImpl(final Failsafe failsafe,
+                       final ExtendedClass<C> clazz,
+                       final Method method,
+                       final ExtendedClassFactory classFactory) {
         this.failsafe = failsafe;
-        this.invoker = invoker;
+        this.clazz = clazz;
         this.method = method;
+        this.classFactory = classFactory;
     }
 
     @Override
-    public String name() {
-        return this.method.getName();
+    public <E> E accept(final ClassVisitor<E> visitor) {
+        return this.clazz.accept(visitor);
+    }
+
+    @Override
+    public Class<C> original() {
+        return this.clazz.original();
+    }
+
+    @Override
+    public String className() {
+        return this.clazz.className();
+    }
+
+    @Override
+    public Collection<ExtendedMethod<C, ?>> methods() {
+        return this.clazz.methods();
     }
 
     @Override
@@ -51,47 +73,40 @@ final class ExtendedMethodImpl implements ExtendedMethod {
     }
 
     @Override
-    public Class<?>[] arguments() {
-        return this.method.getParameterTypes();
+    public String methodName() {
+        return this.method.getName();
     }
 
     @Override
-    public Class<?> returnType() {
-        return this.method.getReturnType();
+    public List<ExtendedClass<?>> parameters() {
+        return Arrays.stream(this.method.getParameterTypes())
+                .map(this.classFactory::create)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean returnsVoid() {
-        final Class<?> returnType = returnType();
-        return returnType.equals(void.class) || returnType.equals(Void.class);
+    public ExtendedClass<R> returnType() {
+        //noinspection unchecked
+        return this.classFactory.create((Class<R>) this.method.getReturnType());
     }
 
-    Method getMethod() {
+    @Override
+    public MethodInvocation<C, R> invocation(final Object[] arguments) {
+        return new MethodInvocationImpl<>(this.failsafe, this, arguments);
+    }
+
+    @Override
+    public Method originalMethod() {
         return this.method;
-    }
-
-    @Override
-    public Optional<Object> apply(final Object[] args) {
-        final Method method = getMethod();
-        final boolean isAccessible = method.isAccessible();
-        try {
-            method.setAccessible(true);
-            return Optional.of(method.invoke(this.invoker, args));
-        } catch (final IllegalAccessException | IllegalArgumentException e) {
-            return this.failsafe.handleException().runtimeException(e);
-        } catch (final InvocationTargetException e) {
-            return this.failsafe.handleException().invocationTargetException(e);
-        } finally {
-            method.setAccessible(isAccessible);
-        }
     }
 
     @Override
     public String toString() {
         return "ExtendedMethodImpl{" +
                 "failsafe=" + this.failsafe +
-                ", invoker=" + this.invoker +
+                ", clazz=" + this.clazz +
                 ", method=" + this.method +
+                ", classFactory=" + this.classFactory +
                 "}";
     }
 }

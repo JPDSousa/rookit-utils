@@ -19,16 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.type;
+package org.rookit.utils.reflect;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
 final class ExtendedClassImpl<T> implements ExtendedClass<T> {
 
     private final Class<T> clazz;
+    private final ExtendedMethodFactory methodFactory;
 
-    ExtendedClassImpl(final Class<T> clazz) {
+    ExtendedClassImpl(final Class<T> clazz, final ExtendedMethodFactory methodFactory) {
         this.clazz = clazz;
+        this.methodFactory = methodFactory;
     }
 
     @Override
@@ -69,5 +75,13 @@ final class ExtendedClassImpl<T> implements ExtendedClass<T> {
     @Override
     public Class<T> original() {
         return this.clazz;
+    }
+
+
+    @Override
+    public Collection<ExtendedMethod<T, ?>> methods() {
+        return Arrays.stream(original().getMethods())
+                .map(method -> this.methodFactory.create(this, method))
+                .collect(Collectors.toSet());
     }
 }

@@ -145,7 +145,7 @@ final class UnmodifiableBag<T> implements Bag<T> {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("failsafe", this.failsafe)
+                .add("injector", this.failsafe)
                 .add("delegate", this.delegate)
                 .toString();
     }

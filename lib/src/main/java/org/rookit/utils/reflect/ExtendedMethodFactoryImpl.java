@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) 2018 Joao Sousa
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,30 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-
 package org.rookit.utils.reflect;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import org.rookit.failsafe.Failsafe;
+
 import java.lang.reflect.Method;
-import java.util.List;
 
-@SuppressWarnings("javadoc")
-public interface ExtendedMethod<C, R> extends ExtendedClass<C> {
-    
-    boolean isAccessible();
-    
-    String methodName();
+final class ExtendedMethodFactoryImpl implements ExtendedMethodFactory {
 
-    List<ExtendedClass<?>> parameters();
+    private final Failsafe failsafe;
+    private final Provider<ExtendedClassFactory> classFactory;
 
-    ExtendedClass<R> returnType();
-
-    MethodInvocation<C, R> invocation(Object[] arguments);
-
-    Method originalMethod();
-
-    default boolean returnsVoid() {
-        final Class<R> original = returnType().original();
-        return original.equals(Void.class) || original.equals(void.class);
+    @Inject
+    private ExtendedMethodFactoryImpl(final Failsafe failsafe, final Provider<ExtendedClassFactory> classFactory) {
+        this.failsafe = failsafe;
+        this.classFactory = classFactory;
     }
 
+    @Override
+    public <C, R> ExtendedMethod<C, R> create(final ExtendedClass<C> clazz, final Method method) {
+        return new ExtendedMethodImpl<>(this.failsafe, clazz, method, this.classFactory.get());
+    }
+
+    @Override
+    public String toString() {
+        return "ExtendedMethodFactoryImpl{" +
+                "failsafe=" + this.failsafe +
+                ", classFactory=" + this.classFactory +
+                "}";
+    }
 }

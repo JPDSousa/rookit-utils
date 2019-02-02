@@ -19,11 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.type;
+package org.rookit.utils.reflect;
 
-public interface ExtendedClass<T> {
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import com.google.inject.Singleton;
 
-    <E> E accept(ClassVisitor<E> visitor);
+public final class ReflectModule extends AbstractModule {
 
-    Class<T> original();
+    private static final Module MODULE = new ReflectModule();
+
+    public static Module getModule() {
+        return MODULE;
+    }
+
+    private ReflectModule() {}
+
+    @Override
+    protected void configure() {
+        bind(ExtendedClassFactory.class).to(BaseExtendedClassFactory.class).in(Singleton.class);
+        bind(ExtendedMethodFactory.class).to(ExtendedMethodFactoryImpl.class).in(Singleton.class);
+    }
 }

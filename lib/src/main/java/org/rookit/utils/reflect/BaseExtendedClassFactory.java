@@ -19,22 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.type;
+package org.rookit.utils.reflect;
 
 import com.google.inject.Inject;
 
 public final class BaseExtendedClassFactory implements ExtendedClassFactory {
 
-    public static ExtendedClassFactory create() {
-        return new BaseExtendedClassFactory();
+    public static ExtendedClassFactory create(final ExtendedMethodFactory methodFactory) {
+        return new BaseExtendedClassFactory(methodFactory);
     }
 
+    private final ExtendedMethodFactory methodFactory;
+
     @Inject
-    private BaseExtendedClassFactory() {}
+    private BaseExtendedClassFactory(final ExtendedMethodFactory methodFactory) {
+        this.methodFactory = methodFactory;
+    }
 
     @Override
     public <T> ExtendedClass<T> create(final Class<T> clazz) {
-        return new ExtendedClassImpl<>(clazz);
+        return new ExtendedClassImpl<>(clazz, this.methodFactory);
     }
 
+    @Override
+    public String toString() {
+        return "BaseExtendedClassFactory{" +
+                "methodFactory=" + this.methodFactory +
+                "}";
+    }
 }

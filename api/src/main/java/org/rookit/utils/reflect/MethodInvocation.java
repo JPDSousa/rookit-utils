@@ -19,10 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.type;
+package org.rookit.utils.reflect;
 
-public interface ExtendedClassFactory {
+import java.util.function.Function;
 
-    <T> ExtendedClass<T> create(Class<T> clazz);
+public interface MethodInvocation<C, R> extends Function<C, R> {
 
+    ExtendedMethod<C, R> method();
+
+    Object[] arguments();
+
+    R invoke(C instance);
+
+    @Override
+    default R apply(final C instance) {
+        return invoke(instance);
+    }
 }

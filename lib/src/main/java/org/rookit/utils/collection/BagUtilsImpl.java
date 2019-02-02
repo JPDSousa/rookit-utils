@@ -91,7 +91,7 @@ public final class BagUtilsImpl implements BagUtils {
     @Override
     public String toString() {
         return "BagUtilsImpl{" +
-                "failsafe=" + this.failsafe +
+                "injector=" + this.failsafe +
                 ", optionalFactory=" + this.optionalFactory +
                 "}";
     }

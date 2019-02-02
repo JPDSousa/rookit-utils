@@ -36,17 +36,19 @@ import org.rookit.utils.primitive.ShortUtils;
 import org.rookit.utils.primitive.ShortUtilsImpl;
 import org.rookit.utils.primitive.VoidUtils;
 import org.rookit.utils.primitive.VoidUtilsImpl;
+import org.rookit.utils.reflect.ReflectModule;
 import org.rookit.utils.string.StringUtils;
 import org.rookit.utils.string.StringUtilsImpl;
 import org.rookit.utils.supplier.SupplierUtils;
 import org.rookit.utils.supplier.SupplierUtilsImpl;
-import org.rookit.utils.type.BaseExtendedClassFactory;
-import org.rookit.utils.type.ExtendedClassFactory;
+import org.rookit.utils.reflect.BaseExtendedClassFactory;
+import org.rookit.utils.reflect.ExtendedClassFactory;
 
 public final class UtilsModule extends AbstractModule {
 
     private static final Module MODULE = Modules.combine(
-            new UtilsModule()
+            new UtilsModule(),
+            ReflectModule.getModule()
     );
 
     public static Module getModule() {
