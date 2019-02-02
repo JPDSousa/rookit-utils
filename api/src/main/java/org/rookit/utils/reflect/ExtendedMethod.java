@@ -36,13 +36,17 @@ public interface ExtendedMethod<C, R> extends ExtendedClass<C> {
 
     ExtendedClass<R> returnType();
 
-    MethodInvocation<C, R> invocation(Object[] arguments);
+    MethodInvocation<C, R> invocation(Object... arguments);
 
     Method originalMethod();
 
     default boolean returnsVoid() {
         final Class<R> original = returnType().original();
         return original.equals(Void.class) || original.equals(void.class);
+    }
+
+    default boolean isCallable() {
+        return !returnsVoid() && (parameters().isEmpty());
     }
 
 }
