@@ -2,9 +2,7 @@ package org.rookit.utils.optional;
 
 import com.google.common.base.MoreObjects;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import org.immutables.value.internal.$processor$.meta.$ValueMirrors;
 
-@$ValueMirrors.Immutable
 class SomeBoolean implements OptionalBoolean {
 
     private final boolean value;
