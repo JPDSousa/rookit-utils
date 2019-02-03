@@ -28,6 +28,10 @@ import com.google.inject.Singleton;
 import com.google.inject.util.Modules;
 import org.rookit.utils.collection.MapUtils;
 import org.rookit.utils.collection.MapUtilsImpl;
+import org.rookit.utils.io.DummyInputStream;
+import org.rookit.utils.io.DummyOutputStream;
+import org.rookit.utils.io.DummyReader;
+import org.rookit.utils.io.DummyWriter;
 import org.rookit.utils.optional.OptionalFactory;
 import org.rookit.utils.optional.OptionalFactoryImpl;
 import org.rookit.utils.optional.OptionalUtils;
@@ -44,6 +48,11 @@ import org.rookit.utils.supplier.SupplierUtilsImpl;
 import org.rookit.utils.reflect.BaseExtendedClassFactory;
 import org.rookit.utils.reflect.ExtendedClassFactory;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+
 public final class UtilsModule extends AbstractModule {
 
     private static final Module MODULE = Modules.combine(
@@ -59,6 +68,8 @@ public final class UtilsModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bindDummy();
+
         bind(OptionalUtils.class).toInstance(OptionalUtilsImpl.create());
         bind(VoidUtils.class).toInstance(VoidUtilsImpl.create());
         bind(SupplierUtils.class).toInstance(SupplierUtilsImpl.create());
@@ -69,5 +80,12 @@ public final class UtilsModule extends AbstractModule {
         bind(OptionalFactory.class).to(OptionalFactoryImpl.class).in(Singleton.class);
         bind(StringUtils.class).to(StringUtilsImpl.class).in(Singleton.class);
         bind(ExtendedClassFactory.class).to(BaseExtendedClassFactory.class).in(Singleton.class);
+    }
+
+    private void bindDummy() {
+        bind(InputStream.class).annotatedWith(Dummy.class).toInstance(DummyInputStream.get());
+        bind(OutputStream.class).annotatedWith(Dummy.class).toInstance(DummyOutputStream.get());
+        bind(Reader.class).annotatedWith(Dummy.class).toInstance(DummyReader.get());
+        bind(Writer.class).annotatedWith(Dummy.class).toInstance(DummyWriter.get());
     }
 }
