@@ -19,25 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.string.template;
 
-import com.google.common.io.Closer;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+public interface Template1 {
 
-public final class CloserProvider implements Provider<Closer> {
-
-    public static Provider<Closer> create() {
-        return new CloserProvider();
-    }
-
-    @Inject
-    private CloserProvider() {
-    }
-
-    @Override
-    public Closer get() {
-        return Closer.create();
-    }
+    String build(CharSequence parameter);
 
 }
