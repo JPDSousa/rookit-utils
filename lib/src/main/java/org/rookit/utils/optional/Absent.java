@@ -21,6 +21,8 @@
  ******************************************************************************/
 package org.rookit.utils.optional;
 
+import com.google.common.collect.ImmutableSet;
+import one.util.streamex.StreamEx;
 import org.rookit.utils.function.ToBooleanFunction;
 import org.rookit.utils.function.ToShortFunction;
 
@@ -28,6 +30,7 @@ import java.util.NoSuchElementException;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -48,6 +51,16 @@ final class Absent<T> implements Optional<T> {
     @Override
     public java.util.Optional<T> toJavaOptional() {
         return java.util.Optional.empty();
+    }
+
+    @Override
+    public StreamEx<T> stream() {
+        return StreamEx.empty();
+    }
+
+    @Override
+    public Set<T> toImmutableSet() {
+        return ImmutableSet.of();
     }
 
     @Override
@@ -92,6 +105,11 @@ final class Absent<T> implements Optional<T> {
     }
 
     @Override
+    public <U> StreamEx<U> flatMapToStream(final Function<? super T, ? extends StreamEx<U>> mapper) {
+        return StreamEx.empty();
+    }
+
+    @Override
     public OptionalInt mapToInt(final ToIntFunction<T> intMapper) {
         return OptionalInt.empty();
     }
@@ -128,7 +146,7 @@ final class Absent<T> implements Optional<T> {
     }
 
     @Override
-    public Optional<T> orgElseMaybe(final Optional<T> fallback) {
+    public Optional<T> orElseMaybe(final Optional<T> fallback) {
         return fallback;
     }
 

@@ -22,12 +22,15 @@
 package org.rookit.utils.optional;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
+import one.util.streamex.StreamEx;
 import org.rookit.utils.function.ToBooleanFunction;
 import org.rookit.utils.function.ToShortFunction;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -65,6 +68,16 @@ final class Present<T> implements Optional<T> {
     }
 
     @Override
+    public StreamEx<T> stream() {
+        return StreamEx.of(this.value);
+    }
+
+    @Override
+    public Set<T> toImmutableSet() {
+        return ImmutableSet.of(this.value);
+    }
+
+    @Override
     public T get() {
         return this.value;
     }
@@ -92,6 +105,11 @@ final class Present<T> implements Optional<T> {
     @Override
     public <U> Optional<U> map(final Function<? super T, ? extends U> mapper) {
         return this.factory.ofNullable(mapper.apply(this.value));
+    }
+
+    @Override
+    public <U> StreamEx<U> flatMapToStream(final Function<? super T, ? extends StreamEx<U>> mapper) {
+        return mapper.apply(this.value);
     }
 
     @Override
@@ -130,7 +148,7 @@ final class Present<T> implements Optional<T> {
     }
 
     @Override
-    public Optional<T> orgElseMaybe(final Optional<T> fallback) {
+    public Optional<T> orElseMaybe(final Optional<T> fallback) {
         return this;
     }
 

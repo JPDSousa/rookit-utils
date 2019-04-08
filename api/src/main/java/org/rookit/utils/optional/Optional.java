@@ -21,12 +21,14 @@
  ******************************************************************************/
 package org.rookit.utils.optional;
 
+import one.util.streamex.StreamEx;
 import org.rookit.utils.function.ToBooleanFunction;
 import org.rookit.utils.function.ToShortFunction;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -38,6 +40,10 @@ import java.util.function.ToLongFunction;
 public interface Optional<T> {
 
     java.util.Optional<T> toJavaOptional();
+
+    StreamEx<T> stream();
+
+    Set<T> toImmutableSet();
 
     T get();
 
@@ -62,6 +68,8 @@ public interface Optional<T> {
 
     <U> Optional<U> map(Function<? super T, ? extends U> mapper);
 
+    <U> StreamEx<U> flatMapToStream(Function<? super T, ? extends StreamEx<U>> mapper);
+
     OptionalInt mapToInt(ToIntFunction<T> intMapper);
 
     OptionalShort mapToShort(ToShortFunction<T> shortMapper);
@@ -78,7 +86,7 @@ public interface Optional<T> {
         return isPresent() ? get() : other;
     }
 
-    default Optional<T> orgElseMaybe(final Optional<T> fallback) {
+    default Optional<T> orElseMaybe(final Optional<T> fallback) {
         return isPresent() ? this : fallback;
     }
 
