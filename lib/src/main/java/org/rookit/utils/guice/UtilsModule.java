@@ -21,9 +21,9 @@
  ******************************************************************************/
 package org.rookit.utils.guice;
 
-import com.google.common.io.Closer;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.util.Modules;
 import org.rookit.utils.collection.MapUtils;
@@ -40,24 +40,29 @@ import org.rookit.utils.primitive.ShortUtils;
 import org.rookit.utils.primitive.ShortUtilsImpl;
 import org.rookit.utils.primitive.VoidUtils;
 import org.rookit.utils.primitive.VoidUtilsImpl;
+import org.rookit.utils.reflect.BaseExtendedClassFactory;
+import org.rookit.utils.reflect.ExtendedClassFactory;
 import org.rookit.utils.reflect.ReflectModule;
 import org.rookit.utils.string.StringUtils;
 import org.rookit.utils.string.StringUtilsImpl;
+import org.rookit.utils.string.template.Template1;
+import org.rookit.utils.string.template.TemplateFactory;
+import org.rookit.utils.string.template.TemplateModule;
 import org.rookit.utils.supplier.SupplierUtils;
 import org.rookit.utils.supplier.SupplierUtilsImpl;
-import org.rookit.utils.reflect.BaseExtendedClassFactory;
-import org.rookit.utils.reflect.ExtendedClassFactory;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Locale;
 
 public final class UtilsModule extends AbstractModule {
 
     private static final Module MODULE = Modules.combine(
             new UtilsModule(),
-            ReflectModule.getModule()
+            ReflectModule.getModule(),
+            TemplateModule.getModule()
     );
 
     public static Module getModule() {
@@ -75,11 +80,12 @@ public final class UtilsModule extends AbstractModule {
         bind(SupplierUtils.class).toInstance(SupplierUtilsImpl.create());
         bind(MapUtils.class).to(MapUtilsImpl.class).in(Singleton.class);
         bind(ShortUtils.class).to(ShortUtilsImpl.class).in(Singleton.class);
-        bind(Closer.class).toProvider(CloserProvider.class).in(Singleton.class);
         //bind(PrintUtils.class).to(PrintUtilsImpl.class).in(Singleton.class);
         bind(OptionalFactory.class).to(OptionalFactoryImpl.class).in(Singleton.class);
         bind(StringUtils.class).to(StringUtilsImpl.class).in(Singleton.class);
         bind(ExtendedClassFactory.class).to(BaseExtendedClassFactory.class).in(Singleton.class);
+        // TODO might be configurable
+        bind(Locale.class).toInstance(Locale.getDefault());
     }
 
     private void bindDummy() {
@@ -87,5 +93,12 @@ public final class UtilsModule extends AbstractModule {
         bind(OutputStream.class).annotatedWith(Dummy.class).toInstance(DummyOutputStream.get());
         bind(Reader.class).annotatedWith(Dummy.class).toInstance(DummyReader.get());
         bind(Writer.class).annotatedWith(Dummy.class).toInstance(DummyWriter.get());
+    }
+
+    @Provides
+    @Singleton
+    @Self
+    Template1 self(final TemplateFactory templateFactory) {
+        return templateFactory.template1();
     }
 }
