@@ -25,6 +25,7 @@ import one.util.streamex.StreamEx;
 import org.rookit.utils.function.ToBooleanFunction;
 import org.rookit.utils.function.ToShortFunction;
 
+import java.util.Collection;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
@@ -66,9 +67,13 @@ public interface Optional<T> {
 
     Optional<T> filter(Predicate<? super T> filter);
 
+    <U> Optional<U> select(Class<U> clazz);
+
     <U> Optional<U> map(Function<? super T, ? extends U> mapper);
 
     <U> StreamEx<U> flatMapToStream(Function<? super T, ? extends StreamEx<U>> mapper);
+
+    <U> StreamEx<U> flatMapToStreamFromCollection(Function<? super T, ? extends Collection<U>> mapper);
 
     OptionalInt mapToInt(ToIntFunction<T> intMapper);
 

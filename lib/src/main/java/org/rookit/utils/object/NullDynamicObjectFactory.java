@@ -19,24 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.object;
 
-import com.google.inject.BindingAnnotation;
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import java.util.Collection;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+final class NullDynamicObjectFactory implements DynamicObjectFactory {
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
+    @Inject
+    private NullDynamicObjectFactory() {}
 
-    boolean unwrap() default false;
+    @Override
+    public Collection<String> supportedTypes() {
+        return ImmutableList.of();
+    }
 
+    @Override
+    public DynamicObject fromRawContent(final String rawContent) throws MalformedObjectException {
+        throw new MalformedObjectException("This factory cannot create DynamicObject instances");
+    }
 }

@@ -21,6 +21,9 @@
  ******************************************************************************/
 package org.rookit.utils.repetition;
 
+import org.immutables.value.Value;
+
+@Value.Immutable
 public interface Repetition {
 
     boolean isMulti();

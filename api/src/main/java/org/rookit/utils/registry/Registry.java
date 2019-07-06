@@ -19,24 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.registry;
 
-import com.google.inject.BindingAnnotation;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import java.io.Closeable;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+public interface Registry<K, V> extends Closeable {
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
+    Maybe<V> get(K key);
 
-    boolean unwrap() default false;
+    Single<V> fetch(K key);
 
 }

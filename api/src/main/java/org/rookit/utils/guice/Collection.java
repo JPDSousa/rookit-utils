@@ -36,4 +36,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @BindingAnnotation
 @Target({FIELD, METHOD, PARAMETER})
 public @interface Collection {
+
+    boolean unwrap() default false;
+
 }

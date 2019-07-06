@@ -19,24 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.registry;
 
-import com.google.inject.BindingAnnotation;
+import com.google.inject.Inject;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+final class BaseRegistriesImpl implements BaseRegistries {
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    @Inject
+    private BaseRegistriesImpl() {}
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
+    @Override
+    public <K, I, O> Registry<K, O> mapValueRegistry(final Registry<K, I> upstream, final Function<I, Single<O>> mapper) {
+        return new MapValueRegistry<>(upstream, mapper);
+    }
 
-    boolean unwrap() default false;
-
+    @Override
+    public <K1, K2, V> Registry<K2, V> mapKeyRegistry(final Registry<K1, V> upstream, final Function<K2, K1> mapper) {
+        return new MapKeyRegistry<>(upstream, mapper);
+    }
 }

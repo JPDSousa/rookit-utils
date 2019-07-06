@@ -35,8 +35,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @BindingAnnotation
 @Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
-
-    boolean unwrap() default false;
-
+public @interface Uncached {
 }

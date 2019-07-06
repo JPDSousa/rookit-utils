@@ -19,24 +19,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.registry;
 
-import com.google.inject.BindingAnnotation;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+final class MapKeyRegistry<I, O, V> implements Registry<O, V> {
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    private final Registry<I, V> upstream;
+    private final Function<O, I> mapKey;
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
+    MapKeyRegistry(final Registry<I, V> upstream, final Function<O, I> mapKey) {
+        this.upstream = upstream;
+        this.mapKey = mapKey;
+    }
 
-    boolean unwrap() default false;
+    @Override
+    public Maybe<V> get(final O key) {
+        return Maybe.just(key)
+                .map(this.mapKey)
+                .flatMap(this.upstream::get);
+    }
 
+    @Override
+    public Single<V> fetch(final O key) {
+        return Single.just(key)
+                .map(this.mapKey)
+                .flatMap(this.upstream::fetch);
+    }
+
+    @Override
+    public String toString() {
+        return "MapKeyRegistry{" +
+                "upstream=" + this.upstream +
+                ", mapKey=" + this.mapKey +
+                "}";
+    }
+
+    @Override
+    public void close() {
+        // nothing to close
+    }
 }

@@ -19,24 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.registry;
 
-import com.google.inject.BindingAnnotation;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+public interface BaseRegistries {
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    <K, V1, V2> Registry<K, V2> mapValueRegistry(Registry<K, V1> upstream, Function<V1, Single<V2>> mapper);
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
-
-    boolean unwrap() default false;
+    <K1, K2, V> Registry<K2, V> mapKeyRegistry(Registry<K1, V> upstream, Function<K2, K1> mapper);
 
 }

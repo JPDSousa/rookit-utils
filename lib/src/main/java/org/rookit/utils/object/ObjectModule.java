@@ -19,24 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.object;
 
-import com.google.inject.BindingAnnotation;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import com.google.inject.Singleton;
+import com.google.inject.multibindings.Multibinder;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+public final class ObjectModule extends AbstractModule {
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    private static final Module MODULE = new ObjectModule();
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
+    public static Module getModule() {
+        return MODULE;
+    }
 
-    boolean unwrap() default false;
+    private ObjectModule() {}
 
+    @Override
+    protected void configure() {
+        bind(DynamicObjectFactory.class).to(BaseDynamicObjectFactory.class).in(Singleton.class);
+
+        final Multibinder<DynamicObjectFactory> mBinder = Multibinder.newSetBinder(binder(),
+                DynamicObjectFactory.class);
+        mBinder.addBinding().to(NullDynamicObjectFactory.class).in(Singleton.class);
+    }
 }

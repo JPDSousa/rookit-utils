@@ -26,6 +26,7 @@ import one.util.streamex.StreamEx;
 import org.rookit.utils.function.ToBooleanFunction;
 import org.rookit.utils.function.ToShortFunction;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -98,6 +99,11 @@ final class Absent<T> implements Optional<T> {
     }
 
     @Override
+    public <U> Optional<U> select(final Class<U> clazz) {
+        return (Optional<U>) this;
+    }
+
+    @Override
     public <U> Optional<U> map(final Function<? super T, ? extends U> mapper) {
         // since it is empty
         //noinspection unchecked
@@ -106,6 +112,11 @@ final class Absent<T> implements Optional<T> {
 
     @Override
     public <U> StreamEx<U> flatMapToStream(final Function<? super T, ? extends StreamEx<U>> mapper) {
+        return StreamEx.empty();
+    }
+
+    @Override
+    public <U> StreamEx<U> flatMapToStreamFromCollection(final Function<? super T, ? extends Collection<U>> mapper) {
         return StreamEx.empty();
     }
 

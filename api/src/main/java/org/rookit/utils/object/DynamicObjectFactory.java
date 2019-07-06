@@ -19,24 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.object;
 
-import com.google.inject.BindingAnnotation;
+import java.io.IOException;
+import java.util.Collection;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+public interface DynamicObjectFactory {
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    // TODO primitive obsession?
+    Collection<String> supportedTypes();
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
-
-    boolean unwrap() default false;
-
+    DynamicObject fromRawContent(String rawContent) throws MalformedObjectException, IOException;
 }

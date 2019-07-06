@@ -19,24 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.system;
 
-import com.google.inject.BindingAnnotation;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import org.rookit.utils.guice.Separator;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+public final class SystemModule extends AbstractModule {
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    private static final Module MODULE = new SystemModule();
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
+    public static Module getModule() {
+        return MODULE;
+    }
 
-    boolean unwrap() default false;
+    private SystemModule() {}
 
+    @Override
+    protected void configure() {
+        bind(String.class).annotatedWith(Separator.class).toInstance(System.lineSeparator());
+    }
 }

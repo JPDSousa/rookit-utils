@@ -19,24 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.object;
 
-import com.google.inject.BindingAnnotation;
+public final class NoSuchPropertyException extends RuntimeException {
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+    private static final long serialVersionUID = -7663770306315690261L;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    public static NoSuchPropertyException missingProperty(final String propertyName) {
+        return new NoSuchPropertyException(String.format("Cannot find property: %s", propertyName));
+    }
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
-
-    boolean unwrap() default false;
-
+    private NoSuchPropertyException(final String message) {
+        super(message);
+    }
 }

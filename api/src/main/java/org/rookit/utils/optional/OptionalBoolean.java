@@ -12,6 +12,14 @@ public interface OptionalBoolean {
 
     boolean getAsBoolean();
 
+    default boolean orElseFalse() {
+        return orElse(false);
+    }
+
+    default boolean orElseTrue() {
+        return orElse(true);
+    }
+
     default boolean orElse(final boolean other) {
         return isPresent() ? getAsBoolean() : other;
     }

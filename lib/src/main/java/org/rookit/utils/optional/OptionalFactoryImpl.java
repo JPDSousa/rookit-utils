@@ -25,6 +25,12 @@ import com.google.inject.Inject;
 
 public final class OptionalFactoryImpl implements OptionalFactory {
 
+    private static final OptionalFactory SINGLETON = new OptionalFactoryImpl();
+
+    public static OptionalFactory create() {
+        return SINGLETON;
+    }
+
     private final Optional<?> empty;
     private final OptionalShort emptyShort;
     private final OptionalBoolean emptyBoolean;

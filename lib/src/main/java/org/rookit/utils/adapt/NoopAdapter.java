@@ -19,24 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.adapt;
 
-import com.google.inject.BindingAnnotation;
+public final class NoopAdapter<E> implements Adapter<E> {
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+    public static <T> Adapter<T> create() {
+        return new NoopAdapter<>();
+    }
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    private NoopAdapter() {
+        // nothing to initialize
+    }
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
-
-    boolean unwrap() default false;
+    @Override
+    public E adapt(final E source) {
+        return source;
+    }
 
 }

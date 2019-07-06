@@ -19,24 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-package org.rookit.utils.guice;
+package org.rookit.utils.object;
 
-import com.google.inject.BindingAnnotation;
+import java.util.Collection;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+public final class MalformedObjectException extends Exception {
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+    private static final long serialVersionUID = -1623781182991414313L;
 
-@SuppressWarnings("javadoc")
-@Retention(RUNTIME)
-@BindingAnnotation
-@Target({FIELD, METHOD, PARAMETER})
-public @interface Optional {
+    public MalformedObjectException(final Collection<String> supportedTypes) {
+        super("This factory does not support this content type. Supported types are: "
+                + supportedTypes);
+    }
 
-    boolean unwrap() default false;
+    public MalformedObjectException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
+    public MalformedObjectException(final String message) {
+        super(message);
+    }
 }

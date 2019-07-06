@@ -27,6 +27,7 @@ import one.util.streamex.StreamEx;
 import org.rookit.utils.function.ToBooleanFunction;
 import org.rookit.utils.function.ToShortFunction;
 
+import java.util.Collection;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
@@ -103,6 +104,14 @@ final class Present<T> implements Optional<T> {
     }
 
     @Override
+    public <U> Optional<U> select(final Class<U> clazz) {
+        if (clazz.isAssignableFrom(this.value.getClass())) {
+            return (Optional<U>) this;
+        }
+        return this.factory.empty();
+    }
+
+    @Override
     public <U> Optional<U> map(final Function<? super T, ? extends U> mapper) {
         return this.factory.ofNullable(mapper.apply(this.value));
     }
@@ -110,6 +119,11 @@ final class Present<T> implements Optional<T> {
     @Override
     public <U> StreamEx<U> flatMapToStream(final Function<? super T, ? extends StreamEx<U>> mapper) {
         return mapper.apply(this.value);
+    }
+
+    @Override
+    public <U> StreamEx<U> flatMapToStreamFromCollection(final Function<? super T, ? extends Collection<U>> mapper) {
+        return StreamEx.of(mapper.apply(this.value));
     }
 
     @Override
