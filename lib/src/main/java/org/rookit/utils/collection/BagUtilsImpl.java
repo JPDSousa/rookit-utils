@@ -22,6 +22,7 @@
 
 package org.rookit.utils.collection;
 
+import com.google.inject.Inject;
 import org.apache.commons.collections4.Bag;
 import org.apache.commons.collections4.bag.HashBag;
 import org.rookit.failsafe.Failsafe;
@@ -35,20 +36,17 @@ import java.util.Comparator;
 import java.util.Objects;
 
 @SuppressWarnings("javadoc")
-public final class BagUtilsImpl implements BagUtils {
+final class BagUtilsImpl implements BagUtils {
 
     /**
      * Logger for this class.
      */
     private static final Logger logger = LoggerFactory.getLogger(BagUtilsImpl.class);
 
-    public static BagUtils create(final Failsafe validator, final OptionalFactory optionalFactory) {
-        return new BagUtilsImpl(validator, optionalFactory);
-    }
-
     private final Failsafe failsafe;
     private final OptionalFactory optionalFactory;
 
+    @Inject
     private BagUtilsImpl(final Failsafe failsafe, final OptionalFactory optionalFactory) {
         this.failsafe = failsafe;
         this.optionalFactory = optionalFactory;

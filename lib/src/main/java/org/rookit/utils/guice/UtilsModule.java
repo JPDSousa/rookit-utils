@@ -32,8 +32,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.util.Modules;
 import org.apache.commons.collections4.Bag;
 import org.apache.commons.collections4.BoundedCollection;
-import org.rookit.utils.collection.MapUtils;
-import org.rookit.utils.collection.MapUtilsImpl;
+import org.rookit.utils.collection.CollectionsModule;
 import org.rookit.utils.io.DummyInputStream;
 import org.rookit.utils.io.DummyOutputStream;
 import org.rookit.utils.io.DummyReader;
@@ -54,11 +53,9 @@ import org.rookit.utils.reflect.ExtendedClassFactory;
 import org.rookit.utils.reflect.ReflectModule;
 import org.rookit.utils.registry.RegistryModule;
 import org.rookit.utils.repetition.RepetitionModule;
-import org.rookit.utils.string.StringUtils;
-import org.rookit.utils.string.StringUtilsImpl;
+import org.rookit.utils.string.StringModule;
 import org.rookit.utils.string.template.Template1;
 import org.rookit.utils.string.template.TemplateFactory;
-import org.rookit.utils.string.template.TemplateModule;
 import org.rookit.utils.supplier.SupplierUtils;
 import org.rookit.utils.supplier.SupplierUtilsImpl;
 import org.rookit.utils.system.SystemModule;
@@ -86,12 +83,13 @@ public final class UtilsModule extends AbstractModule {
 
     private static final Module MODULE = Modules.combine(
             new UtilsModule(),
+            CollectionsModule.getModule(),
             ObjectModule.getModule(),
             ReflectModule.getModule(),
             RegistryModule.getModule(),
             RepetitionModule.getModule(),
-            SystemModule.getModule(),
-            TemplateModule.getModule()
+            StringModule.getModule(),
+            SystemModule.getModule()
     );
 
     public static Module getModule() {
@@ -111,11 +109,9 @@ public final class UtilsModule extends AbstractModule {
         bind(OptionalUtils.class).toInstance(OptionalUtilsImpl.create());
         bind(VoidUtils.class).toInstance(VoidUtilsImpl.create());
         bind(SupplierUtils.class).toInstance(SupplierUtilsImpl.create());
-        bind(MapUtils.class).to(MapUtilsImpl.class).in(Singleton.class);
         bind(ShortUtils.class).to(ShortUtilsImpl.class).in(Singleton.class);
         //bind(PrintUtils.class).to(PrintUtilsImpl.class).in(Singleton.class);
         bind(OptionalFactory.class).to(OptionalFactoryImpl.class).in(Singleton.class);
-        bind(StringUtils.class).to(StringUtilsImpl.class).in(Singleton.class);
         bind(ExtendedClassFactory.class).to(BaseExtendedClassFactory.class).in(Singleton.class);
         // TODO might be configurable
         bind(Locale.class).toInstance(Locale.getDefault());
