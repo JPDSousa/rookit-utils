@@ -25,6 +25,8 @@ import org.rookit.utils.optional.Optional;
 
 public interface StringUtils {
 
+    String capitalizeFirstChar(String str);
+
     int countMatchesIgnoreCase(String str, String sub);
 
     Optional<String> getWithin(String str, String init, String end);

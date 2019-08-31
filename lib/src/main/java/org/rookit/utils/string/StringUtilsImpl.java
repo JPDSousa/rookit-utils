@@ -4,22 +4,37 @@ import com.google.inject.Inject;
 import org.rookit.utils.optional.Optional;
 import org.rookit.utils.optional.OptionalFactory;
 
+import java.util.Locale;
+
 public final class StringUtilsImpl implements StringUtils {
 
-    public static StringUtils create(final OptionalFactory optionalFactory) {
-        return new StringUtilsImpl(optionalFactory);
-    }
-
     private final OptionalFactory optionalFactory;
+    private final Locale locale;
 
     @Inject
-    private StringUtilsImpl(final OptionalFactory optionalFactory) {
+    private StringUtilsImpl(final OptionalFactory optionalFactory, final Locale locale) {
         this.optionalFactory = optionalFactory;
+        this.locale = locale;
+    }
+
+    @Override
+    public String capitalizeFirstChar(final String str) {
+        if (str.isEmpty()) {
+            throw new IllegalArgumentException("Cannot apply capitalization of the first char in an empty string.");
+        }
+        if (str.length() == 1) {
+            return str.toUpperCase(this.locale);
+        }
+
+        return str.substring(0, 1).toUpperCase(this.locale) + str.substring(1);
     }
 
     @Override
     public int countMatchesIgnoreCase(final String str, final String sub) {
-        return org.apache.commons.lang3.StringUtils.countMatches(str.toLowerCase(), sub.toLowerCase());
+        return org.apache.commons.lang3.StringUtils.countMatches(
+                str.toLowerCase(this.locale),
+                sub.toLowerCase(this.locale)
+        );
     }
 
     @Override
@@ -42,6 +57,7 @@ public final class StringUtilsImpl implements StringUtils {
     public String toString() {
         return "StringUtilsImpl{" +
                 "optionalFactory=" + this.optionalFactory +
+                ", locale=" + this.locale +
                 "}";
     }
 }
