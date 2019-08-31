@@ -46,7 +46,6 @@ final class BaseDynamicObjectFactory implements DynamicObjectFactory {
     private final StringUtils stringUtils;
     private final Failsafe failsafe;
 
-    @SuppressWarnings("TypeMayBeWeakened") // due to guice multibinder
     @Inject
     private BaseDynamicObjectFactory(final Set<DynamicObjectFactory> factories,
                                      final StringUtils stringUtils,
