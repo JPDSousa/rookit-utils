@@ -25,7 +25,7 @@ import java.util.Collection;
 
 public interface JointStringFactory {
 
-    JointString parse(String rawItems);
+    JointString parse(CharSequence rawItems);
 
     JointString create(Collection<String> items);
 

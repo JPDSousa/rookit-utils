@@ -43,7 +43,7 @@ final class JointStringFactoryImpl implements JointStringFactory {
     }
 
     @Override
-    public JointString parse(final String rawItems) {
+    public JointString parse(final CharSequence rawItems) {
         if (StringUtils.isBlank(rawItems)) {
             throw  new IllegalArgumentException("Cannot create a joint string from an empty string");
         }
