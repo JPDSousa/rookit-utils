@@ -21,25 +21,10 @@
  ******************************************************************************/
 package org.rookit.utils.collection;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import com.google.inject.Singleton;
+import java.util.Collection;
 
-public final class CollectionsModule extends AbstractModule {
+public interface ClassToInstanceMultiMap {
 
-    private static final Module MODULE = new CollectionsModule();
+    <T> Collection<T> get(Class<T> clazz);
 
-    public static Module getModule() {
-        return MODULE;
-    }
-
-    private CollectionsModule() {}
-
-    @Override
-    protected void configure() {
-        bind(ListUtils.class).to(ListUtilsImpl.class).in(Singleton.class);
-        bind(MapUtils.class).to(MapUtilsImpl.class).in(Singleton.class);
-        bind(BagUtils.class).to(BagUtilsImpl.class).in(Singleton.class);
-        bind(ClassToInstanceMultiMapFactory.class).to(ClassToInstanceMultiMapFactoryImpl.class).in(Singleton.class);
-    }
 }
